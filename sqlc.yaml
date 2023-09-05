@@ -10,7 +10,7 @@ sql:
         schema: "./db/migration/"
         queries: "./db/query"
         database:
-            uri: postgresql://root:secret@172.20.10.3:5432/simple_bank?sslmode=disable
+            uri: postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
         gen:
             go:
                 package: "db"
