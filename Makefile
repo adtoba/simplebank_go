@@ -8,16 +8,16 @@ dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose down
 
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose up 1
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose down 1
 
 sqlc:
 	sqlc generate
