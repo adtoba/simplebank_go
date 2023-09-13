@@ -37,6 +37,13 @@ docker:
 dockerrun:
 	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
 
+
+dockernetwork:
+	docker network create bank-network
+
+docker_connect_network:
+	docker network connect bank-network postgres12
+
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc test server mock migratedown1 migrateup1 dockerrun docker
 
 
