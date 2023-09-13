@@ -19,7 +19,7 @@ type Payload struct {
 }
 
 // NewPayload creates a new token payload
-func NewPayload(email string, duration time.Duration) (*Payload, error) {
+func NewPayload(username string, duration time.Duration) (*Payload, error) {
 	tokenID, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func NewPayload(email string, duration time.Duration) (*Payload, error) {
 		ID: tokenID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        tokenID.String(),
-			Issuer:    email,
+			Issuer:    username,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
 		},
