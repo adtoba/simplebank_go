@@ -1,5 +1,5 @@
 postgres:
-	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres
+	docker run --name postgres12 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres
 
 createdb:
 	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
@@ -8,16 +8,16 @@ dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose down
 
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose up 1
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost/simple_bank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "postgresql://root:secret@192.168.1.31/simple_bank?sslmode=disable" -verbose down 1
 
 sqlc:
 	sqlc generate
@@ -31,7 +31,13 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/adtoba/simplebank/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test server mock migratedown1 migrateup1
+docker:
+	docker build -t simplebank:latest .
+
+dockerrun:
+	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc test server mock migratedown1 migrateup1 dockerrun docker
 
 
 # migrate create -ext sql -dir db/migration -seq add_users
